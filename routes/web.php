@@ -19,4 +19,4 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index');
 
-Route::get('/importExOrder','extremepcController@importOrder');
+Route::get('/importExOrder','extremepcController@grabMpn');
