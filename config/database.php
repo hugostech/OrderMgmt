@@ -48,7 +48,7 @@ return [
 
         'sqlite' => [
             'driver' => 'sqlite',
-            'database' => env('DB_DATABASE', database_path('database.sqlite')),
+            'database' => database_path('database.sqlite'),
             'prefix' => '',
         ],
 
@@ -77,6 +77,19 @@ return [
             'prefix' => '',
             'schema' => 'public',
             'sslmode' => 'prefer',
+        ],
+        'extremepc_mysql' => [
+            'driver'    => 'mysql',
+            'host'      => env('DB_HOST_Ex', 'extremepc.co.nz'),
+            'port'      => env('DB_PORT_Ex', '3306'),
+            'database'  => env('DB_DATABASE_Ex', 'forge'),
+            'username'  => env('DB_USERNAME_Ex', 'forge'),
+            'password'  => env('DB_PASSWORD_Ex', ''),
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'strict'    => false,
+
         ],
 
     ],
