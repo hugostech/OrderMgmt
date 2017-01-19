@@ -90,8 +90,15 @@ class extremepcController extends Controller
 //        $item = new ExItem('Acer Predator G9-793-71YU GTX1070 Gaming Notebook, 17.3" 1080p FullHD Intel i7-6700HQ 16GB DDR4 256GB SSD + 2TB HDD DVDRW GTX1070 8GB GDDR5 Graphics, Win10Home 64bit 1yr VR Ready NH.Q17SA.004');
 //        $item->grabMpn();
     }
-    public function findProduct(){
-        $product = new ExItem('HP Omen 15.6 Inch i5-6300HQ 2.3GHz 8GB RAM 1TB HDD GTX960M Gaming Laptop with Windows 10');
+
+    public function findProduct(Request $request){
+        $this->validate($request,[
+            'code'=>'required'
+        ]);
+        $code = trim($request->input('code'));
+        $ex_product = Ex_product::where('model',$code)->first();
+//        echo $ex_product->description->name;
+        $product = new ExItem($ex_product->description->name);
         echo $product->grabMpn();
     }
 }

@@ -20,4 +20,5 @@ Auth::routes();
 Route::get('/home', 'HomeController@index');
 
 Route::get('/importExOrder','extremepcController@grabMpn');
-Route::get('/findProduct','extremepcController@findProduct');
+Route::post('/findProduct','extremepcController@findProduct');
+Route::get('/findProduct','HomeController@show_findProduct');

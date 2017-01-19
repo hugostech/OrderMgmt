@@ -92,7 +92,11 @@ abstract class baseItem
 
             $this->dom->loadFromUrl($url);
 
-            $a = $this->dom->find('span.product-title')[0]->find('a')[0];
+            $a = $this->dom->find('span.product-title')[0];
+            if(is_null($a)){
+                return null;
+            }
+            $a = $a->find('a')[0];
             $url = 'https://www.elive.co.nz/'.$a->getAttribute('href');
             $this->dom->loadFromUrl($url);
             $a = $this->dom->find('.product-shipping-info')[0];
