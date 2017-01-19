@@ -31,44 +31,82 @@ abstract class baseItem
         $keyword = preg_split("/[\s,]+/",$this->name);
         $keyword = array_slice($keyword,0,7);
 
-//        $url = "https://www.pbtech.co.nz/search?sf=$keyword";
-//        $page = self::getContent($url);
-//        dd($page);
-//        $url = "https://www.elive.co.nz/search.php?term=$keyword";
-//        dd($url);
+        $mpn = '';
 
-//        $dom->loadFromUrl($url);
+        while(count($keyword)>1){
+            $key = self::keyToString($keyword);
 
-//        $a = $dom->find('.info_mfc')[0];
-//        dd($a);
-//        echo $a->text; // "click here"
-//        dd($html);
-//        echo $page;
-        echo self::pbCrawler($keyword);
+            $mpn = self::eliveMpn($key);
+
+            if (empty($mpn)){
+                $mpn = self::pbCrawler($key);
+                if (!empty($mpb)){
+                    return $mpn;
+                }
+            }else{
+                return $mpn;
+            }
+
+
+
+            array_pop($keyword);
+        }
+        return $mpn;
     }
 
-    private function pbCrawler($keyword){
-        if (count($keyword)>1){
-            $word = '';
-            foreach ($keyword as $item){
-                $word.=$item;
-                 $word.='+';
-            }
-            $word = substr($word,0,strlen($word)-1);
-            $url = "https://www.pbtech.co.nz/search?sf=$word";
-//            dd($this->dom);
-            $this->dom->loadFromUrl($url);
+    private function keyToString($keyword){
+        $word = '';
+        foreach ($keyword as $item){
+            $word.=$item;
+            $word.='+';
+        }
+        return substr($word,0,strlen($word)-1);
+    }
 
-            $a = $this->dom->find('.info_mfc')[0];
-            if (is_null($a)){
-                array_pop($keyword);
-                return self::pbCrawler($keyword);
-            }else{
-                return $a->text;
+    private function pbCrawler($word){
+        try{
+            $url = "https://www.pbtech.co.nz/search?sf=$word";
+            $this->dom->loadFromUrl($url);
+            $a = $this->dom->find('.item_description')[0];
+            if(is_null($a)){
+                return null;
             }
-        }else{
+            $a = $a->find('a')[0];
+            $a = $a->getAttribute('href');
+            $url = "https://www.pbtech.co.nz/$a";
+            $this->dom->loadFromUrl($url);
+            $span = $this->dom->find('span[name=mpn]')[0];
+            return trim($span->text);
+        }catch (\Exception $e){
             return null;
         }
+    }
+
+    private function pbProductContent(){
+        echo $this->dom->find('.p_tab_content_dd')[0]->html;
+    }
+
+    private function eliveMpn($word){
+        try{
+            $url = "https://www.elive.co.nz/search.php?term=$word";
+
+            $this->dom->loadFromUrl($url);
+
+            $a = $this->dom->find('span.product-title')[0]->find('a')[0];
+            $url = 'https://www.elive.co.nz/'.$a->getAttribute('href');
+            $this->dom->loadFromUrl($url);
+            $a = $this->dom->find('.product-shipping-info')[0];
+            $lis =  $a->find('li');
+            foreach ($lis as $li){
+                if(trim($li->find('strong')[0]->innerHtml)=='Model Number:'){
+                    return trim($li->find('.content')[0]->text);
+                }
+            }
+            return null;
+        }catch (\Exception $e){
+            return null;
+        }
+
 
     }
 

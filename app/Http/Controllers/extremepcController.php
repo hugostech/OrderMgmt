@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Ex_order;
 use App\Ex_product;
+use App\Jobs\crawlerPB;
 use App\Product;
 use App\Product_description;
 use bbstudios\ExItem;
@@ -66,22 +67,31 @@ class extremepcController extends Controller
 
     }
     public function grabMpn(){
-        $skip = 0;
-        $products = Product::offset($skip)->limit(50)->get();
+//        $skip = 0;
+        $products = Product::where('mpn',null)->limit(5)->get();
 
-        while(count($products)>1){
+//        while(count($products)>1){
 
-            foreach ($products as $product){
+            foreach ($products as $product) {
 //                dd($product->id);
-                $item = new ExItem(html_entity_decode($product->description->name));
-//                dd(html_entity_decode($product->description->name));
-                $product->mpn = $item->grabMpn();
-                $product->save();
-                $skip += 50;
-                $products = Product::offset($skip)->limit(50)->get();
-            }
+                $job = (new crawlerPB($product))
+                    ->delay(20);
 
-        }
+                dispatch($job);
+
+            }
+//            $skip += 50;
+//            $products = Product::offset($skip)->limit(50)->get();
+
+//        }
         echo '1';
+//        $products = Product::where('mpn','<>','')->get();
+//        dd($products);
+//        $item = new ExItem('Acer Predator G9-793-71YU GTX1070 Gaming Notebook, 17.3" 1080p FullHD Intel i7-6700HQ 16GB DDR4 256GB SSD + 2TB HDD DVDRW GTX1070 8GB GDDR5 Graphics, Win10Home 64bit 1yr VR Ready NH.Q17SA.004');
+//        $item->grabMpn();
+    }
+    public function findProduct(){
+        $product = new ExItem('HP Omen 15.6 Inch i5-6300HQ 2.3GHz 8GB RAM 1TB HDD GTX960M Gaming Laptop with Windows 10');
+        echo $product->grabMpn();
     }
 }
