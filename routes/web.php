@@ -22,3 +22,4 @@ Route::get('/home', 'HomeController@index');
 Route::get('/importExOrder','extremepcController@grabMpn');
 Route::post('/findProduct','extremepcController@findProduct');
 Route::get('/findProduct','HomeController@show_findProduct');
+Route::Get('/','HomeController@index');

@@ -8,6 +8,7 @@ use App\Jobs\crawlerPB;
 use App\Product;
 use App\Product_description;
 use bbstudios\ExItem;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Ex_product_description;
 use Illuminate\Support\Facades\DB;
@@ -95,10 +96,16 @@ class extremepcController extends Controller
         $this->validate($request,[
             'code'=>'required'
         ]);
+        echo '-'.Carbon::now();
+        echo '<br>';
         $code = trim($request->input('code'));
         $ex_product = Ex_product::where('model',$code)->first();
-//        echo $ex_product->description->name;
+
+        echo '-'.Carbon::now();
+        echo '<br>';
+
         $product = new ExItem($ex_product->description->name);
-        echo $product->grabMpn();
+        echo '-'.$product->grabMpn();
+        echo '-'.Carbon::now();
     }
 }

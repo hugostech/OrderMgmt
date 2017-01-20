@@ -26,6 +26,12 @@ class HomeController extends Controller
 
         return view('home');
     }
+    /*
+     * show the order management page
+     *
+     * @
+     * */
+
 
     public function show_findproduct(){
         return view('findProduct');
