@@ -23,3 +23,5 @@ Route::get('/importExOrder','extremepcController@grabMpn');
 Route::post('/findProduct','extremepcController@findProduct');
 Route::get('/findProduct','HomeController@show_findProduct');
 Route::Get('/','HomeController@index');
+Route::get('/api/categorys/{keyword}','AjaxController@getExCategory');
+Route::patch('/api/products/mpn/{id}','AjaxController@updateMpn');

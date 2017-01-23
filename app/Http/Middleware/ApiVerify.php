@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Symfony\Component\HttpFoundation\Request;
+use Illuminate\Support\Facades\Request;
 
 class ApiVerify
 {
@@ -16,7 +16,7 @@ class ApiVerify
      */
     public function handle($request, Closure $next)
     {
-        if(Request::ajax()){
+        try{
             $key = Request::header('Api-Key');
             if(decrypt($key)==env('API_KEY')){
                 return $next($request);
@@ -25,10 +25,11 @@ class ApiVerify
                 return response('unauthorized', 401)
                     ->header('Content-Type', 'text/plain');
             }
-        }else{
-            return response('unauthorized', 403)
-                ->header('Content-Type', 'text/plain');
+        }catch (\Exception $e){
+            return response($e->getMessage(),403);
         }
+
+
 
     }
 }
