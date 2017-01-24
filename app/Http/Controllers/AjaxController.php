@@ -18,7 +18,7 @@ class AjaxController extends Controller
 
     public function updateMpn($product_id){
         try{
-            $product = Ex_product::find($product_id);
+            $product = Ex_product::find(trim($product_id));
             $Ex_product = new ExItem($product->description->name);
             $product->mpn = $Ex_product->grabMpn();
             $product->save();
