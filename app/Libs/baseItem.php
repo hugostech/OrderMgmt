@@ -17,6 +17,7 @@ abstract class baseItem
     protected $status;
     protected $name;
     protected $dom;
+    protected $a;
 //    abstract protected function create();
 
 
@@ -35,18 +36,18 @@ abstract class baseItem
 
         while(count($keyword)>1){
             $key = self::keyToString($keyword);
-            echo $key.'<br>';
+//            echo $key.'<br>';
 
             $mpn = self::eliveMpn($key);
 
             if (empty($mpn)){
                 $mpn = self::pbCrawler($key);
                 if (!empty($mpn)){
-                    echo 'pb';
+//                    echo 'pb';
                     return $mpn;
                 }
             }else{
-                echo 'elive';
+//                echo 'elive';
                 return $mpn;
             }
 
@@ -78,7 +79,7 @@ abstract class baseItem
             $a = $a->getAttribute('href');
             $url = "https://www.pbtech.co.nz/$a";
             $this->dom->loadFromUrl($url);
-            self::pbProductContent();
+//            self::pbProductContent();
             $span = $this->dom->find('span[name=mpn]')[0];
             return trim($span->text);
         }catch (\Exception $e){
@@ -87,7 +88,7 @@ abstract class baseItem
     }
 
     private function pbProductContent(){
-        echo $this->dom->find('.productPrintBreak')[0]->innerHtml;
+        return $this->dom->find('.productPrintBreak')[0]->innerHtml;
     }
     private function eliveProductContent(){
         $page = $this->dom->find('.product-overview')[0];
@@ -97,7 +98,7 @@ abstract class baseItem
             $src = 'https://www.elive.co.nz'.substr($src,1,strlen($src));
             $img->setAttribute('src',$src);
         }
-        echo $page->innerHtml;
+        return $page->innerHtml;
     }
 
     private function eliveMpn($word){
@@ -113,7 +114,7 @@ abstract class baseItem
             $a = $a->find('a')[0];
             $url = 'https://www.elive.co.nz/'.$a->getAttribute('href');
             $this->dom->loadFromUrl($url);
-            echo self::eliveProductContent();
+//            echo self::eliveProductContent();
             $a = $this->dom->find('.product-shipping-info')[0];
             $lis =  $a->find('li');
             foreach ($lis as $li){
